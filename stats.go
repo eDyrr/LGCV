@@ -130,7 +130,7 @@ func printDayCol(day int) {
 	case 5:
 		out = " Fri "
 	}
-	fmt.Printf(out)
+	fmt.Println(out)
 }
 
 // printCell given a cell value prints it with a different format
@@ -165,6 +165,7 @@ func printCell(val int, today bool) {
 }
 
 // printCells prints the cells of the graph
+// printCells prints the cells of the graph
 func printCells(cols map[int]column) {
 	printMonths()
 	for j := 6; j >= 0; j-- {
@@ -178,8 +179,15 @@ func printCells(cols map[int]column) {
 					printCell(col[j], true)
 					continue
 				}
+				// Add bounds check here
+				if j < len(col) {
+					printCell(col[j], false)
+				} else {
+					printCell(0, false)
+				}
+			} else {
+				printCell(0, false)
 			}
-			printCell(0, false)
 		}
 		fmt.Printf("\n")
 	}
@@ -204,7 +212,9 @@ func fillCommits(email string, path string, commits map[int]int) map[int]int {
 	// get the HEAD reference
 	ref, err := repo.Head()
 	if err != nil {
-		panic(err)
+		// handle the case where the repository does not have a HEAD reference
+		fmt.Printf("Error: repository at %s does not have a HEAD reference\n", path)
+		return commits
 	}
 
 	// get the commits history starting from the HEAD

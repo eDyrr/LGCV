@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
@@ -24,11 +23,11 @@ func getDotFilePath() string {
 
 // openFile opens the file located at `filePath`. Creates it if it does not exist
 func openFile(filePath string) *os.File {
-	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_WRONLY, 0755)
+	f, err := os.OpenFile(filePath, os.O_APPEND|os.O_RDWR, 0755)
 	if err != nil {
 		if os.IsNotExist(err) {
 			// file does not exist
-			_, err := os.Create(filePath)
+			_, err = os.Create(filePath)
 			if err != nil {
 				panic(err)
 			}
@@ -83,7 +82,10 @@ func sliceContains(slice []string, value string) bool {
 // dumpStringsSliceToFile writes content to the file in path `filePath` (overwriting existing content)
 func dumpStringsSliceToFile(repos []string, filePath string) {
 	content := strings.Join(repos, "\n")
-	ioutil.WriteFile(filePath, []byte(content), 0775)
+	err := os.WriteFile(filePath, []byte(content), 0775)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // addNewSliceElementsToFile given a slice of strings representing paths, stores them

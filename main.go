@@ -1,11 +1,14 @@
 package main
 
-import "flag"
+import (
+	"flag"
+	"fmt"
+)
 
 func main() {
 	var folder string
 	var email string
-	flag.StringVar(&folder, "add", "/Users/edyrr/Desktop/Projects/C++", "add a new folder to scan for Git repos")
+	flag.StringVar(&folder, "add", "", "add a new folder to scan for Git repos")
 	flag.StringVar(&email, "email", "e6yr@proton.me", "the email to scan")
 	flag.Parse()
 
@@ -13,6 +16,6 @@ func main() {
 		scan(folder)
 		return
 	}
-
 	stats(email)
+	fmt.Println("after scan 3")
 }
